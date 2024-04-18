@@ -63,7 +63,7 @@ App = {
                 if(result){
                     tr+="<td>"+ "Genuine Product."+"</td>";
                 }else{
-                    tr+="<td>"+ "Fake Product."+"</td>";
+                    tr+="<td>"+ "Counterfeit Product."+"</td>";
                 }
                 tr+="</tr>";
                 t+=tr;

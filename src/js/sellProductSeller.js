@@ -35,14 +35,35 @@ App = {
         $(document).on('click','.btn-register',App.registerProduct);
     },
 
-    registerProduct: function(event) {
+    registerProduct: async function(event) {
         event.preventDefault();
 
         var productInstance;
 
         var productSN = document.getElementById('productSN').value;
         var consumerCode = document.getElementById('consumerCode').value;
- 
+        
+        if(!productSN || !consumerCode){
+            openModal1();
+            return;
+        }
+        const options = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({productSN})
+          };
+        let data = (await fetch('http://localhost:4000/selltoconsumer', options));
+        data = await data.text()
+        console.log(data);
+        if(data == "Product Already Sold"){
+            openModal();
+            return '';
+        }
+        else{
+            document.getElementById('product').innerHTML = '';
+        }
         //window.ethereum.enable();
         web3.eth.getAccounts(function(error,accounts){
 

@@ -1,3 +1,4 @@
+
 App = {
 
     web3Provider: null,
@@ -35,14 +36,40 @@ App = {
         $(document).on('click','.btn-register',App.registerProduct);
     },
 
-    registerProduct: function(event) {
+    registerProduct: async function(event) {
         event.preventDefault();
 
         var productInstance;
 
         var productSN = document.getElementById('productSN').value;
         var sellerCode = document.getElementById('sellerCode').value;
- 
+        if(!productSN || !sellerCode){
+            openModal1();
+            return;
+        }
+
+        const options = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({productSN, sellerCode})
+          };
+        data = (await fetch('http://localhost:4000/selltoseller', options));
+        data = await data.text()
+        console.log(data);
+        if(data == "Please add the seller"){
+            openModal2();
+            return;
+        }
+        if(data == "Product Already Sold"){
+            openModal();
+            return '';
+        }
+        else{
+            document.getElementById('product').innerHTML = '';
+        }
+        
         //window.ethereum.enable();
         web3.eth.getAccounts(function(error,accounts){
 

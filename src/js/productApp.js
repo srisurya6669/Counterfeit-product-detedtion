@@ -1,3 +1,5 @@
+
+
 App = {
 
     web3Provider: null,
@@ -35,16 +37,35 @@ App = {
         $(document).on('click','.btn-register',App.registerProduct);
     },
 
-    registerProduct: function(event) {
+    registerProduct: async function(event) {
         event.preventDefault();
 
         var productInstance;
-
         var manufacturerID = document.getElementById('manufacturerID').value;
         var productName = document.getElementById('productName').value;
         var productSN = document.getElementById('productSN').value;
         var productBrand = document.getElementById('productBrand').value;
         var productPrice = document.getElementById('productPrice').value;
+        if(!manufacturerID || !productName || !productSN || !productBrand || !productPrice){
+			return;
+		}
+        const options = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({productSN, manufacturerID})
+          };
+        let data = (await fetch('http://localhost:4000/addproduct', options));
+        data = await data.text()
+        console.log(data);
+        if(data == "Product Already Added"){
+            openModal1();
+            return '';
+        }
+        else{
+            document.getElementById('product').innerHTML = '';
+        }
 
         //window.ethereum.enable();
         web3.eth.getAccounts(function(error,accounts){

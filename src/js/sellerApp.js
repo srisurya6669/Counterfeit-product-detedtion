@@ -35,7 +35,7 @@ App = {
         $(document).on('click','.btn-register',App.registerProduct);
     },
 
-    registerProduct: function(event) {
+    registerProduct: async function(event) {
         event.preventDefault();
 
         var productInstance;
@@ -47,7 +47,25 @@ App = {
         var sellerManager = document.getElementById('SellerManager').value;
         var sellerAddress = document.getElementById('SellerAddress').value;
         var ManufacturerId = document.getElementById('ManufacturerId').value;
-       
+        if(!sellerName || !sellerBrand || !sellerCode || !sellerPhoneNumber || !sellerManager || !sellerAddress || !ManufacturerId){
+            openModal();
+            return;
+        }
+        
+        const options = {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({sellerCode, ManufacturerId})
+        };
+        let data = (await fetch('http://localhost:4000/addseller', options));
+        data = await data.text()
+        console.log(data);
+        if(data == "Seller Already Added"){
+            openModal1();
+            return '';
+        }
         
         //window.ethereum.enable();
         web3.eth.getAccounts(function(error,accounts){
